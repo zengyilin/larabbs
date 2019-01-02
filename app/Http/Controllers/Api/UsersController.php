@@ -29,6 +29,6 @@ class UsersController extends Controller
 //        dd($user);
         Cache::forget($request->verification_key);
 
-        return $this->response->created();
+        return $this->response->array(['code'=>0,'message'=>'注册成功']);
     }
 }
