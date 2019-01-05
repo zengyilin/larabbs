@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\UsersRequest;
+use App\Models\Image;
 use App\Models\User;
 use App\Transformers\UserTransformer;
 use Illuminate\Support\Facades\Cache;
@@ -44,5 +45,18 @@ class UsersController extends Controller
         return $this->response->item($this->user(), new UserTransformer());
     }
 
+    public function update(UsersRequest $request)
+    {
+        $user = $this->user();
 
+        $attributes = $request->only(['name','email','introduction']);
+//        dd([$user,$attributes]);
+        if($request->avatar_image_id){
+            $image = Image::find($request->avatar_image_id);
+            $attributes['avatar'] = $image->path;
+        }
+        $user->update($attributes);
+
+        return $this->response->item($user,new UserTransformer());
+    }
 }
